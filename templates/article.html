@@ -8,8 +8,11 @@
     <meta name="description" content="{{article.description}}" />
   </head>
   <body>
-    <h1>{{article.title}}</h1>
-    <article>{{article.content}}</article>
+    {{nav}}
+    <main class="article-detail">
+      <h1 class="article-title">{{article.title}}</h1>
+      <article>{{article.content}}</article>
+    </main>
     <script type="module">
       import { codeToHtml } from "https://esm.sh/shiki@1.0.0";
       const codeBlocks = [...document.querySelectorAll("code")];

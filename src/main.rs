@@ -34,6 +34,7 @@ fn main() {
         fs::read_to_string("./templates/index.html").expect("index.html is missing");
     let article_template =
         fs::read_to_string("./templates/article.html").expect("article.html is missing");
+    let nav_template = fs::read_to_string("./templates/nav.html").expect("nav.html is missing");
     env.add_template("index", &index_template).unwrap();
     env.add_template("article", &article_template).unwrap();
 
@@ -105,7 +106,8 @@ fn main() {
         String::from(OUTPUT_FOLDER_PATH) + "/index.html",
         index_template
             .render(context! {
-                articles
+                articles,
+                nav => nav_template
             })
             .expect("unable to render index template"),
     )
@@ -122,7 +124,8 @@ fn main() {
             article_file_path.clone() + "/index.html",
             article_template
                 .render(context! {
-                    article
+                    article,
+                    nav => nav_template
                 })
                 .expect("Unable to render article template"),
         )

@@ -7,15 +7,16 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <div class="articles">
+    {{nav}}
+    <main class="articles-list">
       {% for article in articles %}
       <div class="article">
-        <h2 class="article-title">
-          <a href="{{article.path}}">{{ article.title }}</a>
-        </h2>
-        <p class="article-description">{{article.description}}</p>
+        <a href="{{article.path}}" class="article-link">
+          <h2 class="article-title">{{ article.title }}</h2>
+          <p class="article-description">{{article.description}}</p>
+        </a>
       </div>
       {% endfor %}
-    </div>
+    </main>
   </body>
 </html>

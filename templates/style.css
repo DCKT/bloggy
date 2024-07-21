@@ -55,6 +55,7 @@ h6 {
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 /* https://catppuccin.com/palette */
 :root {
@@ -85,32 +86,124 @@ h6 {
   --base: #1e1e2e;
   --mantle: #181825;
   --crust: #11111b;
+
+  --container: 650px;
 }
 
 body {
   background-color: var(--base);
   padding: 1rem;
-}
-.articles {
-  max-width: 650px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.article-title a {
-  font-size: 1.75rem;
-  color: var(--mauve);
-  font-weight: 700;
   font-family: "Nunito Sans", sans-serif;
   font-optical-sizing: auto;
   text-decoration: none;
 }
-.article-description {
-  font-size: 1.125rem;
-  color: var(--lavender);
-  font-weight: 400;
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
+.nav {
+  max-width: var(--container);
+  margin: 0 auto 3rem auto;
+
+  .nav-title {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: var(--rosewater);
+    font-family: "JetBrains Mono";
+    text-decoration: none;
+  }
+}
+
+.articles-list {
+  max-width: var(--container);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .article-link {
+    font-size: 1.25rem;
+    color: var(--peach);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    display: block;
+    border-radius: 0.5rem;
+
+    &:hover {
+      background: #f5e0dc1c;
+    }
+  }
+
+  .article-description {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--rosewater);
+  }
+}
+
+.article-detail {
+  max-width: var(--container);
+  margin: auto;
+}
+
+.article-detail .article-title {
+  font-size: 2.2rem;
+  color: var(--peach);
+  font-weight: 800;
+}
+
+.article-detail article {
+  color: var(--rosewater);
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--yellow);
+    margin-bottom: 0.25rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.75rem;
+  }
+  h4 {
+    font-size: 1.525rem;
+  }
+  h5 {
+    font-size: 1.3125rem;
+  }
+  h5 {
+    font-size: 1.25rem;
+  }
+  h6 {
+    font-size: 1.125rem;
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--yellow);
+  }
+  em {
+    font-style: italic;
+  }
+
+  p {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  code pre {
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  img {
+    border-radius: 0.5rem;
+    max-width: 100%;
+    margin: auto;
+    display: block;
+  }
 }
