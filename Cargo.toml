@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+gray_matter = "0.2.8"
+markdown = "1.0.0-alpha.18"
 minijinja = "2.0.3"
 rm_rf = "0.6.2"
 serde = { version = "1.0.204", features = ["derive"] }

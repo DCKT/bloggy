@@ -1,7 +1,12 @@
 Folders & files structure
 
 ```
-~
- index.html
- blog/
+./
+  templates/
+    index.html
+    article.html
+  blog/
+    article-title/
+      index.md
+      article-assets.png
 ```
