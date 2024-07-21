@@ -2,11 +2,13 @@ use std::{fs, vec};
 
 use gray_matter::engine::YAML;
 use gray_matter::Matter;
+use markdown::{CompileOptions, Options};
 use minijinja::{context, Environment};
 
 #[derive(serde::Serialize)]
 struct Article {
     title: String,
+    description: String,
     content: String,
     path: String,
     tags: Vec<String>,
@@ -17,6 +19,7 @@ struct Article {
 #[derive(serde::Deserialize)]
 struct FrontMatter {
     title: String,
+    description: String,
     #[serde(default)]
     tags: Vec<String>,
 }
@@ -58,16 +61,27 @@ fn main() {
 
         let assets = fs::read_dir(blog_file.path()).unwrap();
 
-        let result = matter
+        let matter_result = matter
             .parse_with_struct::<FrontMatter>(&article_md)
             .expect("Invalid frontmatter content");
 
-        let html_content = markdown::to_html(result.content.as_str());
+        let html_content = markdown::to_html_with_options(
+            matter_result.content.as_str(),
+            &Options {
+                compile: CompileOptions {
+                    allow_dangerous_html: true,
+                    ..CompileOptions::default()
+                },
+                ..Options::default()
+            },
+        )
+        .unwrap();
 
         let article = Article {
-            title: result.data.title,
+            title: matter_result.data.title,
+            description: matter_result.data.description,
             content: html_content,
-            tags: result.data.tags,
+            tags: matter_result.data.tags,
             path: String::from("/blog/") + file_name.to_str().unwrap(),
             assets: assets
                 .into_iter()
@@ -86,6 +100,7 @@ fn main() {
         articles.push(article);
     }
 
+    // Write index.html to dist/
     fs::write(
         String::from(OUTPUT_FOLDER_PATH) + "/index.html",
         index_template
@@ -96,6 +111,7 @@ fn main() {
     )
     .expect(format!("Unable to write {}/index.html", OUTPUT_FOLDER_PATH).as_str());
 
+    // For each article, create an index.html file and copy his assets
     for article in articles {
         let article_file_path = String::from(OUTPUT_FOLDER_PATH) + &article.path;
 
@@ -117,6 +133,12 @@ fn main() {
                 .expect(format!("Unable to copy asset from {}", asset).as_str());
         }
     }
+
+    fs::copy(
+        "./templates/style.css",
+        String::from(OUTPUT_FOLDER_PATH) + "/style.css",
+    )
+    .expect("Unable to copy style.css");
 
     println!("\n✅ Site built")
 }

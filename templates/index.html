@@ -4,10 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hello world</title>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    {% for article in articles %}
-    <a href="{{article.path}}">{{ article.title }}</a>
-    {% endfor %}
+    <div class="articles">
+      {% for article in articles %}
+      <div class="article">
+        <h2 class="article-title">
+          <a href="{{article.path}}">{{ article.title }}</a>
+        </h2>
+        <p class="article-description">{{article.description}}</p>
+      </div>
+      {% endfor %}
+    </div>
   </body>
 </html>

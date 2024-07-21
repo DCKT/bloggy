@@ -1,4 +1,8 @@
-Folders & files structure
+# Minimalistic blog builder
+
+Build a file based structure blog in less than a second.
+
+## Structure
 
 ```
 ./
@@ -9,4 +13,17 @@ Folders & files structure
     article-title/
       index.md
       article-assets.png
+```
+
+### Templates
+Available variables : 
+
+```rust
+struct Article {
+  title: String,
+  description: String,
+  content: String,
+  path: String,
+  tags: Vec<String>,
+}
 ```

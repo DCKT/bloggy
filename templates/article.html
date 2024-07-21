@@ -4,9 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{article.title}}</title>
+    <link rel="stylesheet" href="/style.css" />
+    <meta name="description" content="{{article.description}}" />
   </head>
   <body>
     <h1>{{article.title}}</h1>
     <article>{{article.content}}</article>
+    <script type="module">
+      import { codeToHtml } from "https://esm.sh/shiki@1.0.0";
+      const codeBlocks = [...document.querySelectorAll("code")];
+
+      codeBlocks.forEach(async (codeBlock) => {
+        codeBlock.innerHTML = await codeToHtml(codeBlock.innerText, {
+          lang: codeBlock.className.replace("language-", ""),
+          theme: "github-dark",
+        });
+      });
+    </script>
   </body>
 </html>
