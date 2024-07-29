@@ -1,5 +1,10 @@
-use std::{fs, vec};
+use std::{
+    fs,
+    path::{self},
+    vec,
+};
 
+use clap::{Parser, Subcommand};
 use gray_matter::engine::YAML;
 use gray_matter::Matter;
 use markdown::{CompileOptions, Options};
@@ -13,7 +18,7 @@ struct Article {
     path: String,
     tags: Vec<String>,
     #[serde(skip)]
-    assets: Vec<String>,
+    assets: Vec<ArticleAsset>,
 }
 
 #[derive(serde::Deserialize)]
@@ -24,17 +29,33 @@ struct FrontMatter {
     tags: Vec<String>,
 }
 
+struct ArticleAsset {
+    path: String,
+    file_name: String,
+}
+
 const OUTPUT_FOLDER_PATH: &str = "./dist";
 
-fn main() {
+fn build(working_path: &str) {
     rm_rf::ensure_removed(OUTPUT_FOLDER_PATH).unwrap();
+    let absolute_working_path = path::absolute(working_path).expect("Invalid path");
     let mut articles: Vec<Article> = vec![];
     let mut env = Environment::new();
-    let index_template =
-        fs::read_to_string("./templates/index.html").expect("index.html is missing");
-    let article_template =
-        fs::read_to_string("./templates/article.html").expect("article.html is missing");
-    let nav_template = fs::read_to_string("./templates/nav.html").expect("nav.html is missing");
+    let index_template = {
+        let path = absolute_working_path.as_path().join("templates/index.html");
+        fs::read_to_string(path).expect("index.html is missing")
+    };
+    let article_template = {
+        let path = absolute_working_path
+            .as_path()
+            .join("templates/article.html");
+        fs::read_to_string(path).expect("article.html is missing")
+    };
+    let nav_template = {
+        let path = absolute_working_path.as_path().join("templates/nav.html");
+        fs::read_to_string(path).expect("nav.html is missing")
+    };
+
     env.add_template("index", &index_template).unwrap();
     env.add_template("article", &article_template).unwrap();
 
@@ -45,7 +66,10 @@ fn main() {
     fs::create_dir(String::from(OUTPUT_FOLDER_PATH) + "/blog")
         .expect("Unable to create \"blog\" folder");
 
-    let blog_files = fs::read_dir("./blog").expect("Missing \"blog\" folder");
+    let blog_files = {
+        let path = absolute_working_path.as_path().join("blog");
+        fs::read_dir(path).expect("Missing \"blog\" folder")
+    };
 
     for blog_file in blog_files.into_iter() {
         let blog_file = blog_file.unwrap();
@@ -90,7 +114,10 @@ fn main() {
                     let file = file.unwrap();
 
                     if file.file_name() != "index.md" {
-                        Some(String::from(file.path().to_str().unwrap()))
+                        Some(ArticleAsset {
+                            path: String::from(file.path().to_str().unwrap()),
+                            file_name: file.file_name().into_string().unwrap(),
+                        })
                     } else {
                         None
                     }
@@ -132,16 +159,50 @@ fn main() {
         .expect(format!("Unable to write {}", article_file_path).as_str());
 
         for asset in article.assets {
-            let _ = fs::copy(&asset, String::from(OUTPUT_FOLDER_PATH) + &asset[1..])
-                .expect(format!("Unable to copy asset from {}", asset).as_str());
+            let _ = fs::copy(
+                asset.path,
+                String::from(OUTPUT_FOLDER_PATH) + article.path.as_str() + "/" + &asset.file_name,
+            )
+            .expect(format!("\nUnable to copy asset from {} \n\n", asset.file_name).as_str());
         }
     }
 
     fs::copy(
-        "./templates/style.css",
+        absolute_working_path.as_path().join("templates/style.css"),
         String::from(OUTPUT_FOLDER_PATH) + "/style.css",
     )
     .expect("Unable to copy style.css");
 
     println!("\n✅ Site built")
+}
+
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    build: Option<BuildCommands>,
+}
+
+#[derive(Subcommand)]
+enum BuildCommands {
+    Build {
+        #[arg(short, long)]
+        path: Option<String>,
+    },
+}
+
+fn main() {
+    let cli = Cli::parse();
+
+    match &cli.build {
+        Some(BuildCommands::Build { path }) => {
+            let working_path = match path.as_deref() {
+                None => "./",
+                Some(p) => p,
+            };
+
+            build(working_path);
+        }
+        None => (),
+    }
 }

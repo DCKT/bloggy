@@ -1,9 +1,10 @@
 [package]
-name = "site_builder"
+name = "bloggy"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.5.11", features = ["derive"] }
 gray_matter = "0.2.8"
 markdown = "1.0.0-alpha.18"
 minijinja = "2.0.3"
