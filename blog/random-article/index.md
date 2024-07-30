@@ -1,6 +1,8 @@
 ---
 title: Random article
 description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque elementum a quam a varius.
+tags:
+  - Rust
 ---
 
 Hello I'm an article

@@ -4,13 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{article.title}}</title>
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/public/style.css" />
     <meta name="description" content="{{article.description}}" />
   </head>
   <body>
     {{nav}}
     <main class="article-detail">
-      <h1 class="article-title">{{article.title}}</h1>
+      <header class="article-header">
+        <h1 class="article-title">{{article.title}}</h1>
+        <ul class="article-tags">
+          {% for tag in article.tags %}
+            <li class="article-tag">{{ tag }}</li>
+          {% endfor %}
+        </ul>
+      </header>
+
+      </small>
       <article>{{article.content}}</article>
     </main>
     <script type="module">

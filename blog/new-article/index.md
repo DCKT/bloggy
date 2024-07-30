@@ -1,6 +1,8 @@
 ---
 title: new fancy article !
 description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque elementum a quam a varius.
+tags:
+  - random
 ---
 
 Such wow
